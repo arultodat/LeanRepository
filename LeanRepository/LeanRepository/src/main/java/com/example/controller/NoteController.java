@@ -2,9 +2,10 @@ package com.example.controller;
 
 import java.util.List;
 
+import javax.management.relation.RelationTypeNotFoundException;
 import javax.validation.Valid;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.hibernate.ResourceClosedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +20,6 @@ import org.springframework.web.client.ResourceAccessException;
 
 import com.example.model.Note;
 import com.example.repository.NoteRepository;
-
-import ch.qos.logback.core.pattern.parser.Node;
 
 @RestController
 @RequestMapping("/api")
@@ -37,25 +36,25 @@ public class NoteController {
 	
 	//create
 	@PostMapping("/notes")
-	public Note createNote(@Valid @RequestBody Note note)
+	public Note createNote(@Valid @RequestBody Note notes)
 	{
-		return noteRepository.save(note);
+		return noteRepository.save(notes);
 	}
 	
 	//search
 	@GetMapping("/notes/{id}")
-	public Note getNoteById(@PathVariable(value = "id")Long noteId)
+	public Note getNoteById(@PathVariable(value = "id")Long noteId) throws RelationTypeNotFoundException
 	{
 		
-		return noteRepository.findById(noteId).orElseThrow(()-> new ResourceNotFoundException ("Note","id",noteId));
+		return noteRepository.findById(noteId).orElseThrow(()-> new RelationTypeNotFoundException ());
 	}
 
 	//update
 	@PutMapping("/notes/{id}")
-	public Note updateNote(@PathVariable(value = "id")Long noteId), @Valid @RequestBody Note noteDetails)
+	public Note updateNote(@PathVariable(value = "id")Long noteId, @Valid @RequestBody Note noteDetails)
 {
-	Note note = noteRepository.findById(NodeId)
-			.orElseThrow()-> new ResourceAccessException("Note","id",noteId));
+	Note note = noteRepository.findById(noteId)
+			.orElseThrow(()-> new ResourceAccessException("Note"));
 			note.setTitle(noteDetails.getTitle());
 			note.setDescription(noteDetails.getDescription());
 			
@@ -68,7 +67,7 @@ public class NoteController {
 @DeleteMapping("/notes/{id}")
 public ResponseEntity<?> deleteNote(@PathVariable(value="id")Long noteId)
 {
-	Note note = noteRepository.findById(noteId).orElseThrow(()-> new ResourceNoteFoundException("Noote","id", noteId));
+	Note note = noteRepository.findById(noteId).orElseThrow(()-> new ResourceClosedException("Noote"));
 	noteRepository.delete(note);
 	return ResponseEntity.ok().build();
 }
