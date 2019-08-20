@@ -43,32 +43,32 @@ public class NoteController {
 	
 	//search
 	@GetMapping("/notes/{id}")
-	public Note getNoteById(@PathVariable(value = "id")Long noteId) throws RelationTypeNotFoundException
+	public Note getNoteById(@PathVariable(value = "id")Long notesId) throws RelationTypeNotFoundException
 	{
 		
-		return noteRepository.findById(noteId).orElseThrow(()-> new RelationTypeNotFoundException ());
+		return noteRepository.findById(notesId).orElseThrow(()-> new RelationTypeNotFoundException ());
 	}
 
 	//update
 	@PutMapping("/notes/{id}")
-	public Note updateNote(@PathVariable(value = "id")Long noteId, @Valid @RequestBody Note noteDetails)
+	public Note updateNote(@PathVariable(value = "id")Long notesId, @Valid @RequestBody Note noteDetails)
 {
-	Note note = noteRepository.findById(noteId)
-			.orElseThrow(()-> new ResourceAccessException("Note"));
-			note.setTitle(noteDetails.getTitle());
-			note.setDescription(noteDetails.getDescription());
+	Note notes = noteRepository.findById(notesId)
+			.orElseThrow(()-> new ResourceAccessException("Notes"));
+			notes.setTitle(noteDetails.getTitle());
+			notes.setDescription(noteDetails.getDescription());
 			
-			Note updateNote = noteRepository.save(note);
+			Note updateNote = noteRepository.save(notes);
 			return updateNote;
 }
 
 //Delete
 
 @DeleteMapping("/notes/{id}")
-public ResponseEntity<?> deleteNote(@PathVariable(value="id")Long noteId)
+public ResponseEntity<?> deleteNote(@PathVariable(value="id")Long notesId)
 {
-	Note note = noteRepository.findById(noteId).orElseThrow(()-> new ResourceClosedException("Noote"));
-	noteRepository.delete(note);
+	Note notes = noteRepository.findById(notesId).orElseThrow(()-> new ResourceClosedException("Notes"));
+	noteRepository.delete(notes);
 	return ResponseEntity.ok().build();
 }
 }
