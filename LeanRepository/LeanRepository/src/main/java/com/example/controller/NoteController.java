@@ -25,7 +25,7 @@ import com.example.repository.NoteRepository;
 @RequestMapping("/api")
 
 public class NoteController {
-	@Autowired
+	@Autowired	
 	NoteRepository noteRepository;
 	
 	//select
